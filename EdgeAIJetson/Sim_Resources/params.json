@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "units": "meters, kilograms, radians",
+    "frame": "base_link at rear axle center, axle height. X fwd, Y left, Z up.",
+    "mesh_scale_note": "Fusion STL export unit verified in Task 6; generator default 0.001 (mm)"
+  },
+  "wheel_radius": 0.0505,
+  "wheel_width": 0.040,
+  "wheel_mass": 0.12,
+  "wheelbase": 0.213,
+  "track": 0.222,
+  "steer_limit": 0.5236,
+  "steer_knuckle_mass": 0.05,
+  "servo_max_torque": 2.0,
+  "servo_max_speed": 6.0,
+  "motor_max_torque": 1.5,
+  "motor_max_speed": 40.0,
+  "collision_box": { "size": [0.320, 0.190, 0.200], "pos": [0.095, 0.0, 0.075] },
+  "sensor_links": {
+    "laser":       { "pos": [0.150, 0.0, 0.075], "shape": { "type": "cylinder", "radius": 0.0385, "length": 0.039, "axis": "z" }, "mass": 0.185 },
+    "camera_link": { "pos": [0.050, 0.0, 0.155], "shape": { "type": "box", "size": [0.030, 0.165, 0.030] }, "mass": 0.300 },
+    "imu_link":    { "pos": [0.065, 0.0, 0.090], "shape": { "type": "box", "size": [0.010, 0.010, 0.002] }, "mass": 0.01 }
+  },
+  "base_parts": [
+    { "name": "deck",            "type": "box",      "size": [0.300, 0.178, 0.004], "pos": [0.095, 0.0, 0.030],  "mass": 1.20 },
+    { "name": "motors",          "type": "box",      "size": [0.080, 0.150, 0.040], "pos": [0.000, 0.0, 0.000],  "mass": 0.50 },
+    { "name": "battery",         "type": "box",      "size": [0.090, 0.090, 0.030], "pos": [0.070, 0.0, 0.050],  "mass": 0.45 },
+    { "name": "agx_orin",        "type": "box",      "size": [0.110, 0.110, 0.072], "pos": [0.000, 0.0, 0.100],  "mass": 1.45 },
+    { "name": "expansion_board", "type": "box",      "size": [0.015, 0.100, 0.080], "pos": [0.065, 0.0, 0.100],  "mass": 0.15 },
+    { "name": "pcb_stack",       "type": "box",      "size": [0.060, 0.120, 0.050], "pos": [-0.080, 0.0, 0.090], "mass": 0.20 },
+    { "name": "camera_mast",     "type": "cylinder", "radius": 0.008, "length": 0.110, "axis": "z", "pos": [0.050, 0.0, 0.085], "mass": 0.05 }
+  ]
+}
