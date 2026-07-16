@@ -70,6 +70,11 @@ og.Controller.edit(
             # steering = atan(wheelbase * yaw_rate / max(|vx|, eps)); Nav2 sends
             # Twist (vx, wz), the Ackermann node wants (speed, steeringAngle)
             ("twist2steer", "omni.graph.scriptnode.ScriptNode"),
+            # Pack per-wheel commands into arrays for the articulation
+            # controllers (input1 on ConstructArray is a dynamic attribute —
+            # create it alongside arraySize if graph editing complains).
+            ("steer_cmd", "omni.graph.nodes.ConstructArray"),
+            ("drive_cmd", "omni.graph.nodes.ConstructArray"),
         ],
         og.Controller.Keys.SET_VALUES: [
             ("sub_twist.inputs:topicName", "cmd_vel"),
@@ -101,6 +106,8 @@ og.Controller.edit(
             ("pub_odom.inputs:topicName", "odom"),
             ("pub_odom.inputs:odomFrameId", "odom"),
             ("pub_odom.inputs:chassisFrameId", "base_footprint"),
+            ("steer_cmd.inputs:arraySize", 2),
+            ("drive_cmd.inputs:arraySize", 2),
         ],
         og.Controller.Keys.CONNECT: [
             ("tick.outputs:tick", "pub_clock.inputs:execIn"),
@@ -126,8 +133,18 @@ og.Controller.edit(
             ("twist2steer.outputs:steeringAngle", "ackermann.inputs:steeringAngle"),
             ("ackermann.outputs:execOut", "art_steer.inputs:execIn"),
             ("ackermann.outputs:execOut", "art_drive.inputs:execIn"),
-            ("ackermann.outputs:leftWheelAngle", "art_steer.inputs:positionCommand"),
-            ("ackermann.outputs:wheelRotationVelocity", "art_drive.inputs:velocityCommand"),
+            # per-wheel steering angles -> [left, right] position command
+            ("ackermann.outputs:leftWheelAngle", "steer_cmd.inputs:input0"),
+            ("ackermann.outputs:rightWheelAngle", "steer_cmd.inputs:input1"),
+            ("steer_cmd.outputs:array", "art_steer.inputs:positionCommand"),
+            # NOTE: the built-in AckermannController exposes one wheel velocity,
+            # so the ROS2/Nav2 path drives both rear wheels at the same speed
+            # (no differential). The tested per-wheel differential in
+            # isaac/ackermann.py::compute_ackermann is used on the Isaac Lab RL
+            # path instead (see jetacker_cfg.py docstring).
+            ("ackermann.outputs:wheelRotationVelocity", "drive_cmd.inputs:input0"),
+            ("ackermann.outputs:wheelRotationVelocity", "drive_cmd.inputs:input1"),
+            ("drive_cmd.outputs:array", "art_drive.inputs:velocityCommand"),
             ("odom_calc.outputs:execOut", "pub_odom.inputs:execIn"),
             ("odom_calc.outputs:position", "pub_odom.inputs:position"),
             ("odom_calc.outputs:orientation", "pub_odom.inputs:orientation"),
@@ -149,12 +166,12 @@ writer.attach([hydra])
 
 # camera -> /camera/color + /camera/depth (640x480)
 cam_rp = rep.create.render_product(cam_path, [640, 480])
-for writer_name, topic in [
-        ("ROS2PublishImage", "camera/color/image_raw"),
-        ("ROS2PublishCameraInfo", "camera/color/camera_info"),
-        ("ROS2PublishDepthImage", "camera/depth/image_raw")]:
+for writer_name, topic, frame in [
+        ("ROS2PublishImage", "camera/color/image_raw", "camera_color_optical_frame"),
+        ("ROS2PublishCameraInfo", "camera/color/camera_info", "camera_color_optical_frame"),
+        ("ROS2PublishDepthImage", "camera/depth/image_raw", "camera_depth_optical_frame")]:
     w = rep.writers.get(writer_name)
-    w.initialize(topicName=topic, frameId="camera_color_optical_frame")
+    w.initialize(topicName=topic, frameId=frame)
     w.attach([cam_rp])
 
 ctx.save_as_stage(USD_OUT)
