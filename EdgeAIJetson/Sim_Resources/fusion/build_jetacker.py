@@ -85,7 +85,18 @@ def build(root, params):
 
 def run(_context):
     app = adsk.core.Application.get()
-    doc = app.documents.add(adsk.core.DocumentTypes.FusionDesignDocumentType)
+    # The model uses ROS convention (Z up). Document orientation is fixed at
+    # creation from a user preference (default Y up), which makes the ViewCube
+    # show the car on its side. Temporarily switch the preference to Z up for
+    # doc creation, then restore it so other projects are unaffected.
+    gen_prefs = app.preferences.generalPreferences
+    old_orientation = gen_prefs.defaultModelingOrientation
+    gen_prefs.defaultModelingOrientation = \
+        adsk.core.DefaultModelingOrientations.ZUpModelingOrientation
+    try:
+        doc = app.documents.add(adsk.core.DocumentTypes.FusionDesignDocumentType)
+    finally:
+        gen_prefs.defaultModelingOrientation = old_orientation
     design = adsk.fusion.Design.cast(app.activeProduct)
     design.designType = adsk.fusion.DesignTypes.DirectDesignType
     design.fusionUnitsManager.distanceDisplayUnits = \
