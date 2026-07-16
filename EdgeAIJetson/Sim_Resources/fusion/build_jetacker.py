@@ -15,7 +15,7 @@ import adsk.fusion
 SIM = ("/Users/nathanjones/Documents/Arduino/Mining Research Mother File/"
        "Mining-Research/EdgeAIJetson/Sim_Resources")
 M = 100.0        # meters -> Fusion-internal cm
-EXPORT = False   # flipped to True in Task 6
+EXPORT = True    # write STLs to ../meshes/ on each run
 
 AXES = {"x": (1, 0, 0), "y": (0, 1, 0), "z": (0, 0, 1)}
 

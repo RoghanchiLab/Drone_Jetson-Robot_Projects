@@ -3,9 +3,9 @@
   <link name="base_footprint"/>
   <link name="base_link">
     <inertial>
-      <origin xyz="0.0354375 0 0.0601875" rpy="0 0 0"/>
-      <mass value="4"/>
-      <inertia ixx="0.0128341427" iyy="0.0277432063" izz="0.0273841302" ixy="0" ixz="0.00378907812" iyz="0"/>
+      <origin xyz="0.0410741 0 0.0586049" rpy="0 0 0"/>
+      <mass value="4.05"/>
+      <inertia ixx="0.0123744304" iyy="0.027402154" izz="0.0272838653" ixy="0" ixz="0.00364973148" iyz="0"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
