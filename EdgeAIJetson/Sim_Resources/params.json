@@ -27,7 +27,7 @@
     { "name": "battery",         "type": "box",      "size": [0.090, 0.090, 0.030], "pos": [0.070, 0.0, 0.050],  "mass": 0.45 },
     { "name": "agx_orin",        "type": "box",      "size": [0.110, 0.110, 0.072], "pos": [0.000, 0.0, 0.100],  "mass": 1.45 },
     { "name": "expansion_board", "type": "box",      "size": [0.015, 0.100, 0.080], "pos": [0.065, 0.0, 0.100],  "mass": 0.15 },
-    { "name": "pcb_stack",       "type": "box",      "size": [0.060, 0.120, 0.050], "pos": [-0.080, 0.0, 0.090], "mass": 0.20 },
+    { "name": "pcb_stack",       "type": "box",      "size": [0.060, 0.120, 0.050], "pos": [-0.025, 0.0, 0.090], "mass": 0.20 },
     { "name": "camera_mast",     "type": "cylinder", "radius": 0.008, "length": 0.110, "axis": "z", "pos": [0.050, 0.0, 0.085], "mass": 0.05 }
   ]
 }
